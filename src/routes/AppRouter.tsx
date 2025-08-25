@@ -97,6 +97,8 @@ const AppRouter: React.FunctionComponent<INavbarProps> = ({ isOpenMenu }) => {
         )
 
         const rolesMap = new Map<string, string[]>()
+        console.log("response.data.data",response.data.data);
+        
         response.data.data.forEach(
           (submenu: {
             getRoleList: { roleName: string }[]
