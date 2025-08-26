@@ -37,7 +37,6 @@ const RoleAssignment: React.FunctionComponent<IRoleAssignmentProps> = ({}) => {
     ),
   )
 
-
   const {
     currentPage,
     totalPages,
@@ -70,6 +69,7 @@ const RoleAssignment: React.FunctionComponent<IRoleAssignmentProps> = ({}) => {
     fetchAPI()
   }
 
+
   const fetchAPI = useCallback(() => {
     setLoading(true)
     axios
@@ -86,6 +86,8 @@ const RoleAssignment: React.FunctionComponent<IRoleAssignmentProps> = ({}) => {
         },
       )
       .then((res) => {
+        console.log("res.data.data",res.data.data.filter);
+        
         if (res.data.data) {
           const filteredData = res.data.data.filter(
             (item: any) => !item.isDeleted,
@@ -93,12 +95,58 @@ const RoleAssignment: React.FunctionComponent<IRoleAssignmentProps> = ({}) => {
           setListData(filteredData)
           setTotalItems(filteredData.length) // Set totalItems correctly after filtering
         }
+        console.log("filteredData",filteredData);
+        
       })
       .catch((error) => console.log(error))
       .finally(() => {
         setLoading(false)
       })
   }, [currentPage, itemsPerPage])
+
+
+  // for single user only
+// const fetchAPI = useCallback(() => {
+//   setLoading(true)
+//   axios
+//     .get(
+//       `${process.env.NEXT_PUBLIC_API_URL}/MES_UserDetails/GetUserMapping`,
+//       {
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//         },
+//         params: {
+//           page: currentPage,
+//           limit: itemsPerPage,
+//         },
+//       },
+//     )
+//     .then((res) => {
+//       console.log("API Response:", res.data);
+      
+//       if (res.data.data) {
+//         // Handle single user object
+//         const userData = res.data.data;
+        
+//         // If you need it as an array for your list component
+//         if (!userData.isDeleted) {
+//           setListData([userData]); // Wrap in array
+//           setTotalItems(1);
+//         } else {
+//           setListData([]);
+//           setTotalItems(0);
+//         }
+//       }
+//     })
+//     .catch((error) => {
+//       console.log("API Error:", error);
+//       setListData([]);
+//       setTotalItems(0);
+//     })
+//     .finally(() => {
+//       setLoading(false)
+//     })
+// }, [currentPage, itemsPerPage])
 
   useEffect(() => {
     fetchAPI()
