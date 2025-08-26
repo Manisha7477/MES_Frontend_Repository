@@ -49,6 +49,14 @@ const ManageUsers: React.FunctionComponent<IManageUsersProps> = ({}) => {
   const [tableHeaderFilter, setTableHeaderFilter] = useState(
     USER_STRUCTURE_HEADER_DATA,
   )
+
+   // Filter data based on search query BEFORE pagination - aritra change
+  const filteredData = listData.filter((item) =>
+    Object.values(item).some((value) =>
+      value?.toString().toLowerCase().includes(searchQuery.toLowerCase()),
+    ),
+  )
+
   const {
     currentPage,
     totalPages,
@@ -56,7 +64,7 @@ const ManageUsers: React.FunctionComponent<IManageUsersProps> = ({}) => {
     goToPreviousPage,
     goToPage,
     currentData,
-  } = usePagination(totalItems, itemsPerPage)
+  } = usePagination(filteredData.length, itemsPerPage)
 
   // const handleClickEditAction = (infoSelectedRow: Record<string, any>) => {
   //   console.log(infoSelectedRow)
@@ -159,12 +167,6 @@ const ManageUsers: React.FunctionComponent<IManageUsersProps> = ({}) => {
     fetchAPI()
   }, [fetchAPI])
 
-  // Filter data based on search query BEFORE pagination - aritra change
-  const filteredData = listData.filter((item) =>
-    Object.values(item).some((value) =>
-      value?.toString().toLowerCase().includes(searchQuery.toLowerCase()),
-    ),
-  )
 
   // Apply pagination AFTER filtering - aritra change
   const currentItems = currentData(filteredData).map((item, index) => ({

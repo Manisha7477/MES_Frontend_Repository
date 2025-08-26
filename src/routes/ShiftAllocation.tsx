@@ -33,6 +33,13 @@ const ShiftAllocation: React.FunctionComponent<
   const itemsPerPageOptions = [5, 10, 15, 20, 30, 40, 50]
   const [itemsPerPage, setItemsPerPage] = useState(itemsPerPageOptions[1]) // Default to 10 items per page
 
+    // Filter data based on search query BEFORE pagination - aritra change
+  const filteredData = listData.filter((item) =>
+    Object.values(item).some((value) =>
+      value?.toString().toLowerCase().includes(searchQuery.toLowerCase()),
+    ),
+  )
+
   const {
     currentPage,
     totalPages,
@@ -40,7 +47,7 @@ const ShiftAllocation: React.FunctionComponent<
     goToPreviousPage,
     goToPage,
     currentData,
-  } = usePagination(totalItems, itemsPerPage)
+  } = usePagination(filteredData.length, itemsPerPage)
 
   const handleClickEditAction = (infoSelectedRow: Record<string, any>) => {
     navigate(
@@ -106,13 +113,6 @@ const ShiftAllocation: React.FunctionComponent<
   useEffect(() => {
     fetchAPI()
   }, [currentPage, itemsPerPage]) // Re-fetch data when page or items per page changes
-
-  // Filter data based on search query BEFORE pagination - aritra change
-  const filteredData = listData.filter((item) =>
-    Object.values(item).some((value) =>
-      value?.toString().toLowerCase().includes(searchQuery.toLowerCase()),
-    ),
-  )
 
   // Apply pagination AFTER filtering - aritra change
   const currentItems = currentData(filteredData).map((item, index) => ({
