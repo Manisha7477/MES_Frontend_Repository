@@ -1,10 +1,14 @@
 // usePagination.ts
-import { useState } from "react";
+import { useState,useEffect } from "react";
 
 const UsePagination = (totalItems: number, itemsPerPage: number) => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+   useEffect(() => {
+    setCurrentPage(1);
+  }, [totalItems]);
 
   const goToPage = (page: number) => {
     if (page < 1) {

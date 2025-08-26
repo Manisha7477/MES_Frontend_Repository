@@ -31,6 +31,13 @@ const ManageStorageLocation: React.FunctionComponent<
   const [searchQuery, setSearchQuery] = useState("") //aritra change
   const itemsPerPageOptions = [5, 10, 15, 20, 30, 40, 50]
   const [itemsPerPage, setItemsPerPage] = useState(itemsPerPageOptions[1]) // Default to 10 items per page
+ 
+  // Filter data based on search query BEFORE pagination - aritra change
+  const filteredData = listData.filter((item) =>
+    Object.values(item).some((value) =>
+      value?.toString().toLowerCase().includes(searchQuery.toLowerCase()),
+    ),
+  )
 
   const {
     currentPage,
@@ -39,7 +46,7 @@ const ManageStorageLocation: React.FunctionComponent<
     goToPreviousPage,
     goToPage,
     currentData,
-  } = usePagination(totalItems, itemsPerPage)
+  } = usePagination(filteredData.length, itemsPerPage)
 
   const handleClickEditAction = (infoSelectedRow: Record<string, any>) => {
     navigate(
@@ -105,13 +112,6 @@ const ManageStorageLocation: React.FunctionComponent<
   useEffect(() => {
     fetchAPI()
   }, [fetchAPI])
-
-  // Filter data based on search query BEFORE pagination - aritra change
-  const filteredData = listData.filter((item) =>
-    Object.values(item).some((value) =>
-      value?.toString().toLowerCase().includes(searchQuery.toLowerCase()),
-    ),
-  )
 
   // Apply pagination AFTER filtering - aritra change
   const currentItems = currentData(filteredData).map((item, index) => ({
