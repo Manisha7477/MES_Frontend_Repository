@@ -1,6 +1,3 @@
-  
-
-
 import { IFormVariable } from "@/utils/types";
 import axios from "axios";
 import { ErrorMessage, useFormikContext } from "formik";
@@ -25,7 +22,6 @@ const CustomSelectField: React.FunctionComponent<ISelectFieldProps> = ({
   const [searchInput, setSearchInput] = useState<string>("");
   const [showOptions, setShowOptions] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-
   const token = nookies.get(null).accessToken || "";
 
   // const parseApiData = (data: any[]): { id: string | number; name: string }[] => {
@@ -78,17 +74,16 @@ const CustomSelectField: React.FunctionComponent<ISelectFieldProps> = ({
     });
   };
   
-
-
-
   useEffect(() => {
     const fetchData = async () => {
       if (variable.API) {
+        console.log("variable.API",variable);
+        
         try {
           const result = await axios.get(`${variable.API}`, {
             headers: { Authorization: `Bearer ${token}` },
           });
-          const parsedData = parseApiData(result?.data?.Data || []);
+          const parsedData = parseApiData(result?.data.data || []);
           setDropOptions(parsedData);
           setFilteredOptions(parsedData);
         } catch (error) {
